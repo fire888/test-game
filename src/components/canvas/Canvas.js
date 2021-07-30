@@ -63,6 +63,7 @@ export function reel(posX) {
     app.ticker.add(delta => slotSpin(delta))
 
     function slotSpin(delta) {
+      /** console.log(app.ticker.count) */
       reelContainer.y += 10
 
       if (reelContainer.y > containerHeight) {
@@ -75,6 +76,13 @@ export function reel(posX) {
     async function game() {
     let promise = new Promise((resolve, reject) => {
       setTimeout(() => addSlots(), 100)
+      /** ////////////////////////////////////////////////////////////
+       *  ВЫ 10 раз в секунду создаете контейнер в него кладете спрайт и в тикер добавляете функцию апдейта.
+       *  В функции апдейта вы если спрайт доходит до низа снова создаете конттейнер.
+       *
+       *  Не уничтожая при этом старый и не удаляя функцию апдейта.
+       *  Если раскомментируете выше лог - увидете сколько апдейтов вызывается.
+        */
     });
     let result = await promise;
     return result;
