@@ -43,7 +43,7 @@ const app = new PIXI.Application({
 
 export function reel(posX) {
 
-    const arrSp = []
+    const arrSlots= []
 
     for (let i = 0; i < COUNT_SPRITES; ++i) {
         const sp = new PIXI.Sprite()
@@ -51,17 +51,18 @@ export function reel(posX) {
         sp.x = posX
         sp.y = i * SPRITE_SIZE
         app.stage.addChild(sp)
-        arrSp.push(sp)
+        arrSlots.push(sp)
     }
 
 
     const updateSlotsY = () => {
-        for (let i = 0; i < arrSp.length; ++i) {
-            arrSp[i].y += 10
+        for (let i = 0; i < arrSlots.length; ++i) {
+            const sp = arrSlots[i]
+            sp.y += 10
 
-            if (arrSp[i].y > arrSp.length * SPRITE_SIZE) {
-                arrSp[i].y = 0
-                arrSp[i].texture = arrTextures[Math.floor(Math.random() * arrTextures.length)]
+            if (sp.y > arrSlots.length * SPRITE_SIZE) {
+                sp.y = 0
+                sp.texture = arrTextures[Math.floor(Math.random() * arrTextures.length)]
             }
         }
     }
