@@ -12,76 +12,61 @@ import orangeImage from '../../images/orange.png';
 import pearImage from '../../images/pear.png';
 import strawberryImage from '../../images/strawberry.png';
 
+
+
+const SPRITE_SIZE = 50
+const COUNT_SPRITES = 5
+const IMAGES_PATHS = [
+    appleImage,
+    bananaImage,
+    bottleImage,
+    cocktailImage,
+    coinImage,
+    lemonImage,
+    moneyImage,
+    orangeImage,
+    pearImage,
+    strawberryImage,
+]
+const arrTextures = IMAGES_PATHS.map(path => PIXI.Texture.from(path))
+
+
+
 const app = new PIXI.Application({
-  width: window.innerWidth,
-  height: window.innerHeight - 100,
-  backgroundColor: 0x733ed2,
-  forceCanvas: true
-});
+    width: window.innerWidth,
+    height: window.innerHeight - 100,
+    backgroundColor: 0x733ed2,
+    forceCanvas: true
+})
 
-const appleTexture = PIXI.Texture.from(appleImage);
-const bananaTexture = PIXI.Texture.from(bananaImage);
-const bottleTexture = PIXI.Texture.from(bottleImage);
-const cocktailTexture = PIXI.Texture.from(cocktailImage);
-const coinTexture = PIXI.Texture.from(coinImage);
-const lemonTexture = PIXI.Texture.from(lemonImage);
-const moneyTexture = PIXI.Texture.from(moneyImage);
-const orangeTexture = PIXI.Texture.from(orangeImage);
-const pearTexture = PIXI.Texture.from(pearImage);
-const strawberryTexture = PIXI.Texture.from(strawberryImage);
 
-const apple = new PIXI.Sprite(appleTexture);
-const banana = new PIXI.Sprite(bananaTexture);
-const bottle = new PIXI.Sprite(bottleTexture);
-const cocktail = new PIXI.Sprite(cocktailTexture);
-const coin = new PIXI.Sprite(coinTexture);
-const lemon = new PIXI.Sprite(lemonTexture);
-const money = new PIXI.Sprite(moneyTexture);
-const orange = new PIXI.Sprite(orangeTexture);
-const pear = new PIXI.Sprite(pearTexture);
-const strawberry = new PIXI.Sprite(strawberryTexture);
-
-const reelItems = [
-  apple, banana, bottle, cocktail, coin, lemon, money, orange, pear, strawberry
-];
-
-const container = new PIXI.Container();
-const containerHeight = container.height = 150;
-app.stage.addChild(container);
 
 export function reel(posX) {
 
-  function addSlots() {
-    let reelContainer = new PIXI.Container();
-    let sprite = reelItems[Math.floor(Math.random() * reelItems.length)];
-    sprite.height = 50;
-    sprite.width = 50;
-    reelContainer.addChild(sprite);
-    reelContainer.x = posX;
-    reelContainer.y = 10;
-    container.addChild(reelContainer);
-    app.ticker.add(delta => slotSpin(delta))
+    const arrSp = []
 
-    function slotSpin(delta) {
-      reelContainer.y += 10
+    for (let i = 0; i < COUNT_SPRITES; ++i) {
+        const sp = new PIXI.Sprite()
+        sp.height = sp.width = SPRITE_SIZE
+        sp.x = posX
+        sp.y = i * SPRITE_SIZE
+        app.stage.addChild(sp)
+        arrSp.push(sp)
+    }
 
-      if (reelContainer.y > containerHeight) {
-        container.removeChild(reelContainer);
-        reelContainer.y = 10;
-        reelContainer = new PIXI.Container();
-        sprite = reelItems[Math.floor(Math.random() * reelItems.length)];
-      }
+
+    const updateSlotsY = () => {
+        for (let i = 0; i < arrSp.length; ++i) {
+            arrSp[i].y += 10
+
+            if (arrSp[i].y > arrSp.length * SPRITE_SIZE) {
+                arrSp[i].y = 0
+                arrSp[i].texture = arrTextures[Math.floor(Math.random() * arrTextures.length)]
+            }
+        }
     }
-    async function game() {
-    let promise = new Promise((resolve, reject) => {
-      setTimeout(() => addSlots(), 100)
-    });
-    let result = await promise;
-    return result;
-    }
-    game();
-  }
-  addSlots();
+
+    app.ticker.add(updateSlotsY)
 }
 
 
